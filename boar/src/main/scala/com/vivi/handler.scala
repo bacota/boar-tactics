@@ -15,6 +15,7 @@ class LambdaHandler {
         val problem: Problem = read[Problem](json)
         val stream = new PrintStream(output)
         stream.print(s"Problem  is ${problem}")
+        stream.print(s"Solution  is ${problem.solution}")        
         output.close()
     }
 }

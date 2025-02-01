@@ -6,6 +6,18 @@ import optimus.optimization.model.{MPFloatVar, MPIntVar, ModelSpec}
 import optimus.algebra.Const
 import optimus.algebra.Expression
 
+val tactics = Seq(
+    "Skrimish",
+    "Echelon",
+    "Stand",
+    "Withdraw",
+    "Frontal",
+    "Reserves",
+    "Turn Flank",
+    "Refuse Flank",
+    "Expectation"
+)
+
 case class Problem(
     leader: Boolean,
     oppLeader: Boolean,
@@ -16,7 +28,7 @@ case class Problem(
     oppTurnFlank: Boolean = true
 ) extends ModelSpec(SolverLib.oJSolver) {
 
-    def opposite = Problem(
+    lazy val opposite = Problem(
         leader = oppLeader,
         oppLeader = leader,
         flank = flank,
@@ -26,7 +38,7 @@ case class Problem(
         oppTurnFlank = turnFlank
     )
 
-    def solve = {
+    lazy val solution: Seq[Option[Double]] = {
         val skirmish = MPFloatVar(0, 1)
         val echelon = MPFloatVar(0, 1)
         val stand = MPFloatVar(0, 1)
@@ -95,7 +107,7 @@ def printSolution(vars: Seq[Option[Double]]) = {
         "Refuse Flank",
         "Expectation"
     )
-    val pairs = names.zip(values)
+    val pairs = tactics.zip(values)
     for (p <- pairs) {
         Console.err.println(s"${p._1} = ${p._2}")
     }
@@ -111,7 +123,7 @@ object test extends App {
             problem = Problem(leader = leader, oppLeader = oppLeader)
             prob <-
                 if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
-        } yield (prob, prob.solve)
+        } yield (prob, prob.solution)
 
     val ncVals = Range(1, 7)
     val moreProblems = for {
@@ -130,7 +142,7 @@ object test extends App {
             hexVal = hexVal
         )
         prob <- if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
-    } yield (prob, prob.solve)
+    } yield (prob, prob.solution)
 
     val savannahProblems = for {
         leader <- Seq(false, true)
@@ -149,7 +161,7 @@ object test extends App {
             hexVal = hexVal
         )
         prob <- if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
-    } yield (prob, prob.solve)
+    } yield (prob, prob.solution)
 
     val allProblems = problems ++ moreProblems ++ savannahProblems
 
