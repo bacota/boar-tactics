@@ -96,17 +96,6 @@ case class Problem(
 
 def printSolution(vars: Seq[Option[Double]]) = {
     val values = vars.map(_.getOrElse(0))
-    val names = Seq(
-        "Skrimish",
-        "Echelon",
-        "Stand",
-        "Withdraw",
-        "Frontal",
-        "Reserves",
-        "Turn Flank",
-        "Refuse Flank",
-        "Expectation"
-    )
     val pairs = tactics.zip(values)
     for (p <- pairs) {
         Console.err.println(s"${p._1} = ${p._2}")

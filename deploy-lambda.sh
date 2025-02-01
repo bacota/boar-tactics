@@ -1,5 +1,8 @@
 #!/bin/bash
 mill --ticker false boar.assembly
+if [ $? -ne 0 ]; then
+    exit 1
+fi
 aws s3 cp ./out/boar/assembly.dest/out.jar s3://bruce-test.vivi.com/boar.jar
 export PAGER=""
 sleep 3
