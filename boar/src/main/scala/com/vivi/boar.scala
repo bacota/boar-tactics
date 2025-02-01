@@ -1,4 +1,4 @@
-package com.vivi
+package com.vivi.boar
 
 import optimus.optimization._
 import optimus.optimization.enums.SolverLib
@@ -102,7 +102,7 @@ def printSolution(vars: Seq[Option[Double]]) = {
     Console.err.println("")
 }
 
-object main extends App {
+object test extends App {
 
     val problems =
         for {
