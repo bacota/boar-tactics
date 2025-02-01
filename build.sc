@@ -9,6 +9,9 @@ object boar extends ScalaModule with ScalafmtModule {
 
     def ivyDeps = Agg(
         ivy"com.github.vagmcs:optimus_3:3.4.5",
+        ivy"com.github.vagmcs:optimus-solver-oj_3:3.4.5",
+        ivy"com.amazonaws:aws-lambda-java-core:1.2.3",
+        ivy"com.amazonaws:aws-lambda-java-events:3.14.0",
     )
 
     object test extends ScalaTests {

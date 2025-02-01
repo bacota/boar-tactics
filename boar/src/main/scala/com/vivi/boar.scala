@@ -1,4 +1,4 @@
-package com.vivi.boarCURSOR
+package com.vivi
 
 import optimus.optimization._
 import optimus.optimization.enums.SolverLib
@@ -97,12 +97,12 @@ def printSolution(vars: Seq[Option[Double]]) = {
     )
     val pairs = names.zip(values)
     for (p <- pairs) {
-        println(s"${p._1} = ${p._2}")
+        Console.err.println(s"${p._1} = ${p._2}")
     }
-    println("")
+    Console.err.println("")
 }
 
-object main {
+object main extends App {
 
     val problems =
         for {
@@ -153,11 +153,11 @@ object main {
 
     val allProblems = problems ++ moreProblems ++ savannahProblems
 
-    println(s"${allProblems.size} RESULTS")
-    println("========")
+    Console.err.println(s"${allProblems.size} RESULTS")
+    Console.err.println("========")
 
     for ((prob, sols) <- allProblems) {
-        println(prob.printParams)
+        Console.err.println(prob.printParams)
         printSolution(sols)
     }
 }
