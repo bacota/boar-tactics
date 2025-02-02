@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Decision Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .drm-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .drm-value {
+            margin: 0 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Game Decision Input</h1>
+    </header>
+    <main>
+        <div class="container">
+          <h2>Input Form</h2>
+          <table>
+            <tr align="left"><label><td>Leader </td><td><input type="checkbox" id="leader"></td></label></tr>
+             <tr align="left"><label><td>Opposing Leader </td><td><input type="checkbox" id="opposing-leader"></td></label></tr>
+             <tr align="left"><label><td>Open Flank </td><td><input type="checkbox" id="open-flank"></td></label></tr>
+             <tr align="left"><label><td>Withdraw?</td><td>
+                <select id="withdraw">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="maybe">Maybe</option>
+                </select>
+                </td>
+            </label></tr>
+             <tr align="left"><div class="drm-container">
+                   <td>DRM</td>
+               <td>
+                <button onclick="changeDrm(-1)">-</button>
+                <span id="drm-value">0</span>
+                <button onclick="changeDrm(1)">+</button>
+                </td>
+               </div>
+               </tr>
+            </table>
+            <button onclick="submitData()">Submit</button>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        let drm = 0;
+        function changeDrm(value) {
+            drm += value;
+            document.getElementById("drm-value").textContent = drm;
+        }
+        function submitData() {
+            const leader = document.getElementById("leader").checked;
+            const opposingLeader = document.getElementById("opposing-leader").checked;
+            const openFlank = document.getElementById("open-flank").checked;
+            const withdraw = document.getElementById("withdraw").value;
+            
+            const data = {
+                leader,
+                opposingLeader,
+                openFlank,
+                withdraw,
+                drm
+            };
+
+            fetch("https://example.com/api/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+              .then(data => console.log("Success:", data))
+              .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
