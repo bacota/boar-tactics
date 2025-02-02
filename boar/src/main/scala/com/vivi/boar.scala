@@ -7,7 +7,7 @@ import optimus.algebra.Const
 import optimus.algebra.Expression
 
 val tactics = Seq(
-    "Skrimish",
+    "Skirmish",
     "Echelon",
     "Stand",
     "Withdraw",
@@ -22,7 +22,7 @@ case class Problem(
     leader: Boolean,
     oppLeader: Boolean,
     flank: Boolean = false,
-    ncVal: Double = 0,
+    drm: Double = 0,
     hexVal: Double = 10,
     turnFlank: Boolean = true,
     oppTurnFlank: Boolean = true
@@ -32,7 +32,7 @@ case class Problem(
         leader = oppLeader,
         oppLeader = leader,
         flank = flank,
-        ncVal = if (ncVal == 0) ncVal else -ncVal,
+        drm = if (drm == 0) drm else -drm,
         hexVal = hexVal,
         turnFlank = oppTurnFlank,
         oppTurnFlank = turnFlank
@@ -47,7 +47,7 @@ case class Problem(
         val reserves = MPFloatVar(0, 1)
         val turn = MPFloatVar(0, 1)
         val refuse = MPFloatVar(0, 1)
-        val nc = Const(ncVal)
+        val nc = Const(-drm)
         val hex = Const(hexVal)
         val v = MPFloatVar(-2, 2)
         val all: Expression =
@@ -90,7 +90,7 @@ case class Problem(
     }
 
     def printParams =
-        s"${leader} | ${oppLeader} | ${flank}| ${ncVal} |${hexVal} |  ${turnFlank} | ${oppTurnFlank} "
+        s"${leader} | ${oppLeader} | ${flank}| ${drm} |${hexVal} |  ${turnFlank} | ${oppTurnFlank} "
 
 }
 
@@ -114,20 +114,20 @@ object test extends App {
                 if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
         } yield (prob, prob.solution)
 
-    val ncVals = Range(1, 7)
+    val drms = Range(1, 7)
     val moreProblems = for {
         leader <- Seq(false, true)
         oppLeader <- Seq(false, true)
         flank <- if (leader || oppLeader) Seq(false, true) else Seq(false)
         hexVal <- Seq(0, 0.5)
-        ncVal <- ncVals
+        drm <- drms
         problem = Problem(
             leader = leader,
             oppLeader = oppLeader,
             flank = flank,
             turnFlank = true,
             oppTurnFlank = true,
-            ncVal = ncVal,
+            drm = drm,
             hexVal = hexVal
         )
         prob <- if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
@@ -139,14 +139,14 @@ object test extends App {
         turnFlank <- if (leader) Seq(true, false) else Seq(false)
         oppTurnFlank <- if (oppLeader && leader && turnFlank) Seq(false) else Seq(true)
         hexVal <- Seq(0, 0.5)
-        ncVal <- Range(0, 7)
+        drm <- Range(0, 7)
         problem = Problem(
             leader = leader,
             oppLeader = oppLeader,
             flank = true,
             turnFlank = turnFlank,
             oppTurnFlank = oppTurnFlank,
-            ncVal = ncVal,
+            drm = drm,
             hexVal = hexVal
         )
         prob <- if (problem == problem.opposite) Seq(problem) else Seq(problem, problem.opposite)
