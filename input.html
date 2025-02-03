@@ -69,7 +69,16 @@
                 <button onclick="changeDrm(1)">+</button>
                 </td>
                </div>
-               </tr>
+             </tr>
+             <tr align="left"><label><td>Savannah Rule?</td><td>
+                <select id="savannah">
+                    <option value="no">No</option>
+                    <option value="me">Me</option>
+                    <option value="opponent">Opponent</option>
+                </select>
+                </td>
+            </label></tr>
+             
             </table>
           <button onclick="submitData()">Submit</button>
           <table>
@@ -105,7 +114,8 @@
             const leader = document.getElementById("leader").checked;
             const opposingLeader = document.getElementById("opposing-leader").checked;
             const openFlank = document.getElementById("open-flank").checked;
-            withdraw = document.getElementById("withdraw").value;
+           withdraw = document.getElementById("withdraw").value;
+           savannah = document.getElementById("savannah").value
 
             if (withdraw == "yes")
                 hexVal = 0
@@ -113,13 +123,22 @@
                 hexVal = 0.5
            else
                hexVal = 100;
-            
+
+           turnFlank = true
+           oppTurnFlank = true
+           if (savannah == "me")
+               turnFlank = false
+           else if (savannah == "opponent")
+               oppTurnFlank = false               
+               
             const data = {
                 "leader" : leader,
                 "oppLeader" : opposingLeader,
                 "flank" : openFlank,
                 "hexVal" : hexVal,
-                "drm" : drm
+                "drm" : drm,
+                "turnFlank": turnFlank,
+                "oppTurnFlank":oppTurnFlank
             };
             console.log(JSON.stringify(data))
 
