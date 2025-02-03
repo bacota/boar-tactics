@@ -80,7 +80,7 @@
             </label></tr>
              
             </table>
-          <button onclick="submitData()">Submit</button>
+          <button onclick="submitData()" id="submit">Submit</button>
           <table>
             <tr align="left"><td>Expected DRM</td><td><input type="text" size="12" id="expected"/></td></tr>
             <tr align="left"><td>Suggested Tactic</td><td><input type="text" size="12" id="tactic"></td></tr>
@@ -160,20 +160,11 @@
                    document.getElementById(tactic).value = probabilities[tactic]
            }
 
-            /*
-            fetch("https://mkq8rl2jql.execute-api.us-east-1.amazonaws.com/test/boar", {
-                method: "POST",
-                mode: 'no-cors',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data)
-            }).then(data => { console.log("RETURNED ", data); return data; })
-                .then(data => { return data.json(); } )
-                .then(json => console.log("Success:", json))
-                .catch(error => console.error("Error:", error)) ;
-                */
-        }
+           button = document.getElementById("submit")
+           if (button) {
+               button.style.backgroundColor = button.style.backgroundColor === 'blue' ? 'green' : 'blue';
+           }
+       }
     </script>
 </body>
 </html>
