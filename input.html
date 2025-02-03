@@ -85,29 +85,52 @@
             drm += value;
             document.getElementById("drm-value").textContent = drm;
         }
-        function submitData() {
+       async  function submitData() {
             const leader = document.getElementById("leader").checked;
             const opposingLeader = document.getElementById("opposing-leader").checked;
             const openFlank = document.getElementById("open-flank").checked;
             const withdraw = document.getElementById("withdraw").value;
+
+            hexVal = 0;
+            if (withdraw == "yes")
+                hexVal = 0
+            else if (withdraw="maybe")
+                hexVal = 0.5
             
             const data = {
-                leader,
-                opposingLeader,
-                openFlank,
-                withdraw,
-                drm
+                "leader" : leader,
+                "oppLeader" : opposingLeader,
+                "flank" : openFlank,
+                "hexVal" : hexVal,
+                "drm" : drm
             };
+            console.log(JSON.stringify(data))
 
-            fetch("https://example.com/api/submit", {
+            response = await fetch("https://63n8onlxlc.execute-api.us-east-1.amazonaws.com/boar", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "'*",
                 },
                 body: JSON.stringify(data)
-            }).then(response => response.json())
-              .then(data => console.log("Success:", data))
-              .catch(error => console.error("Error:", error));
+            })
+           console.log(response)
+           jsonResponse = await response.text()
+           console.log(jsonResponse)
+
+            /*
+            fetch("https://mkq8rl2jql.execute-api.us-east-1.amazonaws.com/test/boar", {
+                method: "POST",
+                mode: 'no-cors',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+            }).then(data => { console.log("RETURNED ", data); return data; })
+                .then(data => { return data.json(); } )
+                .then(json => console.log("Success:", json))
+                .catch(error => console.error("Error:", error)) ;
+                */
         }
     </script>
 </body>
