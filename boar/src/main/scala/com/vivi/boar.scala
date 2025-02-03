@@ -8,11 +8,11 @@ import optimus.algebra.Expression
 
 val tactics = Seq(
     "Skirmish",
-    "Echelon",
-    "Stand",
+    "Echelon Assault",
+    "Stand Fast",
     "Withdraw",
-    "Frontal",
-    "Reserves",
+    "Frontal Assault",
+    "Commit Reserves",
     "Turn Flank",
     "Refuse Flank",
     "Expectation"

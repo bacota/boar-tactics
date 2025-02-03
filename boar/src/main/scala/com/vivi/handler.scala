@@ -8,7 +8,7 @@ import upickle.default._
 import scala.util.Random
 
 case class Response(
-    value: Double,
+    expected: Double,
     suggestion: String,
     values: Map[String, Double]
 )
@@ -21,12 +21,6 @@ class LambdaHandler {
     implicit val boarRW: ReadWriter[Problem] = upickle.default.macroRW[Problem]
     implicit val responseRW: ReadWriter[Response] = upickle.default.macroRW[Response]
 
-    val headers = Map(
-        ("Content-Type"-> "application/json"),
-        ( "Access-Control-Allow-Origin", "*"),
-        ("Access-Control-Allow-Methods", "OPTIONS,POST,GET")
-    )
-
     def handleRequest(input: InputStream, output: OutputStream, context: Context): Unit = {
         val jsonString = Source.fromInputStream(input).mkString
         val json = ujson.read(jsonString)
@@ -36,11 +30,10 @@ class LambdaHandler {
         val problem: Problem = read[Problem](body)
         val stream = new PrintStream(output)
         val solution = problem.solution.map(_.getOrElse(0.0))
-        val value = solution.last + problem.drm
         val scan: Seq[Double] = solution.scanLeft(0.0)((x, y) => x + y)
         val r = random.nextDouble()
         val response = Response(
-            value = solution.last + problem.drm,
+            expected =  solution.last + problem.drm,
             suggestion = scan.zip(tactics).reverse.find(_._1 <= r).get._2,
             values = tactics.zip(solution).toMap
         )
