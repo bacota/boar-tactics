@@ -10,6 +10,7 @@ import scala.util.Random
 case class Response(
     expected: Double,
     suggestion: String,
+    opponent: String,
     values: Map[String, Double]
 )
 
@@ -23,6 +24,12 @@ class LambdaHandler {
     implicit val boarRW: ReadWriter[Problem] = upickle.default.macroRW[Problem]
     implicit val responseRW: ReadWriter[Response] = upickle.default.macroRW[Response]
 
+    def findBest[T](values: Seq[T], weights: Seq[Double]) = {
+        val scan: Seq[Double] = weights.scanLeft(0.0)((x, y) => x + y)
+        val r = random.nextDouble()
+        scan.zip(values).reverse.find(_._1 <= r).get._2
+    }
+
     def handleRequest(input: InputStream, output: OutputStream, context: Context): Unit = {
         val jsonString = Source.fromInputStream(input).mkString
         val json = ujson.read(jsonString)
@@ -32,11 +39,11 @@ class LambdaHandler {
         val problem: Problem = read[Problem](body)
         val stream = new PrintStream(output)
         val solution = problem.solution.map(_.getOrElse(0.0))
-        val scan: Seq[Double] = solution.scanLeft(0.0)((x, y) => x + y)
-        val r = random.nextDouble()
+        val oppSolution = problem.opposite.solution.map(_.getOrElse(0.0))
         val response = Response(
             expected =  solution.last + problem.drm,
-            suggestion = scan.zip(tactics).reverse.find(_._1 <= r).get._2,
+            suggestion = findBest(weights = solution, values = tactics),
+            opponent =  findBest(weights = oppSolution, values = tactics),
             values = tactics.zip(solution).toMap
         )
         stream.println(write(response))
