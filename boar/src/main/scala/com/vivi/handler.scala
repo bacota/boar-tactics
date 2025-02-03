@@ -7,24 +7,18 @@ import scala.io.Source
 import upickle.default._
 import scala.util.Random
 
-case class ResponseBody(
+case class Response(
     value: Double,
     suggestion: String,
     values: Map[String, Double]
 )
 
-case class Response(
-    statusCode: Int = 200,
-    headers: Map[String, String] = Map(),
-    body: ResponseBody
-)
 
 class LambdaHandler {
 
     val random = new Random()
 
     implicit val boarRW: ReadWriter[Problem] = upickle.default.macroRW[Problem]
-    implicit val responseBodyRW: ReadWriter[ResponseBody] = upickle.default.macroRW[ResponseBody]
     implicit val responseRW: ReadWriter[Response] = upickle.default.macroRW[Response]
 
     val headers = Map(
@@ -47,14 +41,10 @@ class LambdaHandler {
         val value = solution.last + problem.drm
         val scan: Seq[Double] = solution.scanLeft(0.0)((x, y) => x + y)
         val r = random.nextDouble()
-        val responseBody = ResponseBody(
+        val response = Response(
             value = solution.last + problem.drm,
             suggestion = scan.zip(tactics).reverse.find(_._1 <= r).get._2,
             values = tactics.zip(solution).toMap
-        )
-        val response = Response(
-            headers = headers,
-            body = responseBody
         )
         println(s"Response is ${write(response)}")
         stream.println(write(response))
