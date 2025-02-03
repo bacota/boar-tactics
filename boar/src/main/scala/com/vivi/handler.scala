@@ -29,10 +29,8 @@ class LambdaHandler {
 
     def handleRequest(input: InputStream, output: OutputStream, context: Context): Unit = {
         val jsonString = Source.fromInputStream(input).mkString
-        println(jsonString)
         val json = ujson.read(jsonString)
         val bodyStr = json("body").str
-        println(bodyStr)        
         val isEncoded = json("isBase64Encoded").bool
         val body = if (!isEncoded) bodyStr else  String(Base64.getDecoder().decode(bodyStr))
         val problem: Problem = read[Problem](body)
@@ -46,7 +44,6 @@ class LambdaHandler {
             suggestion = scan.zip(tactics).reverse.find(_._1 <= r).get._2,
             values = tactics.zip(solution).toMap
         )
-        println(s"Response is ${write(response)}")
         stream.println(write(response))
         output.close()
     }
