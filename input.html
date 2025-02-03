@@ -106,12 +106,8 @@
             };
             console.log(JSON.stringify(data))
 
-            response = await fetch("https://63n8onlxlc.execute-api.us-east-1.amazonaws.com/boar", {
+            response = await fetch("https://1q7v6joz50.execute-api.us-east-1.amazonaws.com/boar", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "'*",
-                },
                 body: JSON.stringify(data)
             })
            console.log(response)
