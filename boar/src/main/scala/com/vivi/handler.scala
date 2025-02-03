@@ -35,7 +35,13 @@ class LambdaHandler {
 
     def handleRequest(input: InputStream, output: OutputStream, context: Context): Unit = {
         val jsonString = Source.fromInputStream(input).mkString
-        val problem: Problem = read[Problem](jsonString)
+        println(jsonString)
+        val json = ujson.read(jsonString)
+        val bodyStr = json("body").str
+        println(bodyStr)        
+        val isEncoded = json("isBase64Encoded").bool
+        val body = if (!isEncoded) bodyStr else  String(Base64.getDecoder().decode(bodyStr))
+        val problem: Problem = read[Problem](body)
         val stream = new PrintStream(output)
         val solution = problem.solution.map(_.getOrElse(0.0))
         val value = solution.last + problem.drm
