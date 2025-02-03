@@ -16,6 +16,8 @@ case class Response(
 
 class LambdaHandler {
 
+    System.setProperty("logback.configurationFile", "logback-boar.xml")
+
     val random = new Random()
 
     implicit val boarRW: ReadWriter[Problem] = upickle.default.macroRW[Problem]

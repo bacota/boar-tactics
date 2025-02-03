@@ -105,6 +105,8 @@ def printSolution(vars: Seq[Option[Double]]) = {
 
 object test extends App {
 
+    System.setProperty("logback.configurationFile", "logback-boar.xml")
+
     val problems =
         for {
             leader <- Seq(false, true)
