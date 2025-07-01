@@ -111,62 +111,63 @@
             drm += value;
             document.getElementById("drm-value").textContent = drm;
         }
-       async  function submitData() {
-            const leader = document.getElementById("leader").checked;
-            const opposingLeader = document.getElementById("opposing-leader").checked;
-            const openFlank = document.getElementById("open-flank").checked;
-           withdraw = document.getElementById("withdraw").value;
-           savannah = document.getElementById("savannah").value
-
-            if (withdraw == "yes")
-                hexVal = 0
-            else if (withdraw=="maybe")
-                hexVal = 0.5
-           else
-               hexVal = 100;
-
-           turnFlank = true
-           oppTurnFlank = true
-           if (savannah == "me")
-               turnFlank = false
-           else if (savannah == "opponent")
-               oppTurnFlank = false               
-               
-            const data = {
-                "leader" : leader,
-                "oppLeader" : opposingLeader,
-                "flank" : openFlank,
-                "hexVal" : hexVal,
-                "drm" : drm,
-                "turnFlank": turnFlank,
-                "oppTurnFlank":oppTurnFlank
-            };
-            console.log(JSON.stringify(data))
-
-            response = await fetch("https://1q7v6joz50.execute-api.us-east-1.amazonaws.com/boar", {
-                method: "POST",
-                body: JSON.stringify(data)
-            })
-           console.log(response)
-           jsonResponse = await response.json()
-           console.log(jsonResponse)
-           
-           document.getElementById('expected').value = jsonResponse.expected
-           document.getElementById('tactic').value = jsonResponse.suggestion
-           document.getElementById('opponent').value = jsonResponse.opponent           
-
-           probabilities = jsonResponse.values
-           for (tactic in probabilities) {
-               input = document.getElementById(tactic)
-               if (input)
-                   document.getElementById(tactic).value = probabilities[tactic]
-           }
-
-           button = document.getElementById("submit")
-           if (button) {
-               button.style.backgroundColor = button.style.backgroundColor === 'blue' ? 'green' : 'blue';
-           }
-       }
+      async  function submitData() {
+          button = document.getElementById("submit")
+          nextButtonColor = button.style.backgroundColor === 'blue' ? 'green' : 'blue';
+          button.style.backgroundColor = 'gray'
+          
+          const leader = document.getElementById("leader").checked;
+          const opposingLeader = document.getElementById("opposing-leader").checked;
+          const openFlank = document.getElementById("open-flank").checked;
+          withdraw = document.getElementById("withdraw").value;
+          savannah = document.getElementById("savannah").value
+          
+          if (withdraw == "yes")
+              hexVal = 0
+          else if (withdraw=="maybe")
+              hexVal = 0.5
+          else
+              hexVal = 100;
+          
+          turnFlank = true
+          oppTurnFlank = true
+          if (savannah == "me")
+              turnFlank = false
+          else if (savannah == "opponent")
+              oppTurnFlank = false               
+          
+          const data = {
+              "leader" : leader,
+              "oppLeader" : opposingLeader,
+              "flank" : openFlank,
+              "hexVal" : hexVal,
+              "drm" : drm,
+              "turnFlank": turnFlank,
+              "oppTurnFlank":oppTurnFlank
+          };
+          console.log(JSON.stringify(data))
+          
+          response = await fetch("https://1q7v6joz50.execute-api.us-east-1.amazonaws.com/boar", {
+              method: "POST",
+              body: JSON.stringify(data)
+          })
+          console.log(response)
+          jsonResponse = await response.json()
+          console.log(jsonResponse)
+          
+          document.getElementById('expected').value = jsonResponse.expected
+          document.getElementById('tactic').value = jsonResponse.suggestion
+          document.getElementById('opponent').value = jsonResponse.opponent           
+          
+          probabilities = jsonResponse.values
+          for (tactic in probabilities) {
+              input = document.getElementById(tactic)
+              if (input)
+                  document.getElementById(tactic).value = probabilities[tactic]
+          }
+          
+          button.style.backgroundColor = nextButtonColor
+      }
     </script>
 </body>
 </html>
