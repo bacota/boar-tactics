@@ -77,14 +77,26 @@
                     <option value="opponent">Opponent</option>
                 </select>
                 </td>
+             </label></tr>
+
+             <tr align="left"><label><td>Chew House?</td><td>
+                <select id="chew">
+                    <option value="no">No</option>
+                    <option value="me">Me</option>
+                    <option value="opponent">Opponent</option>
+                </select>
+                </td>
             </label></tr>
+             
+             
              
             </table>
           <button onclick="submitData()" id="submit">Submit</button>
           <table>
-            <tr align="left"><td>Expected DRM</td><td><input type="text" size="12" id="expected"/></td></tr>
             <tr align="left"><td>Suggested Tactic</td><td><input type="text" size="12" id="tactic"></td></tr>
             <tr align="left"><td>Opposing Suggestion</td><td><input type="text" size="12" id="opponent"></td></tr>            
+            <tr align="left"><td>Expected DRM</td><td><input type="text" size="12" id="expected"/></td></tr>
+            <tr align="left"><td>Actual DRM</td><td><input type="text" size="12" id="actual"/></td></tr>            
           </table>
 
           <table border="1" id="alltactics">
@@ -93,7 +105,7 @@
           <table>
             <tr><th cospan="2" >Probabilities</th></tr>
             <tr align="left"><td>Skirmish</td><td><input type="text" size="4" id="Skirmish"></td></tr>
-            <tr align="left"><td>Echelon Assault</td><td><input type="text" size="4" id="Echelon Assault"></td></tr>
+            <tr align="left"><td>Attack on Echelon</td><td><input type="text" size="4" id="Echelon Assault"></td></tr>
             <tr align="left"><td>Stand Fast</td><td><input type="text" size="4" id="Stand Fast"></td></tr>
             <tr align="left"><td>Withdraw</td><td><input type="text" size="4" id="Withdraw"></td></tr>
             <tr align="left"><td>Frontal Assault</td><td><input type="text" size="4" id="Frontal Assault"></td></tr>
@@ -121,6 +133,7 @@
           const openFlank = document.getElementById("open-flank").checked;
           withdraw = document.getElementById("withdraw").value;
           savannah = document.getElementById("savannah").value
+          chew = document.getElementById("chew").value          
           
           if (withdraw == "yes")
               hexVal = 0
@@ -131,10 +144,21 @@
           
           turnFlank = true
           oppTurnFlank = true
+          useEchelon = true
+          oppEchelon = true
+          
           if (savannah == "me")
               turnFlank = false
           else if (savannah == "opponent")
-              oppTurnFlank = false               
+              oppTurnFlank = false
+
+          if (chew == "me") { 
+              turnFlank = false
+              useEchelon = false
+          } else if (chew == "opponent") {
+              oppTurnFlank = false
+              oppEchelon = false
+          }
           
           const data = {
               "leader" : leader,
@@ -143,7 +167,9 @@
               "hexVal" : hexVal,
               "drm" : drm,
               "turnFlank": turnFlank,
-              "oppTurnFlank":oppTurnFlank
+              "oppTurnFlank":oppTurnFlank,
+              "useEchelon":useEchelon,
+              "oppEchelon":oppEchelon
           };
           console.log(JSON.stringify(data))
           
@@ -156,6 +182,7 @@
           console.log(jsonResponse)
           
           document.getElementById('expected').value = jsonResponse.expected
+          document.getElementById('actual').value = jsonResponse.drm
           document.getElementById('tactic').value = jsonResponse.suggestion
           document.getElementById('opponent').value = jsonResponse.opponent           
           

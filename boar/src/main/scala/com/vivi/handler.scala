@@ -11,7 +11,8 @@ case class Response(
     expected: Double,
     suggestion: String,
     opponent: String,
-    values: Map[String, Double]
+    values: Map[String, Double],
+    drm: Option[Int]
 )
 
 
@@ -40,11 +41,15 @@ class LambdaHandler {
         val stream = new PrintStream(output)
         val solution = problem.solution.map(_.getOrElse(0.0))
         val oppSolution = problem.opposite.solution.map(_.getOrElse(0.0))
+        val  suggestion = findBest(weights = solution, values = tactics)
+        val  opponent =  findBest(weights = oppSolution, values = tactics)
+        val tacticNames = tactics.map(_.name)
         val response = Response(
-            expected =  solution.last + problem.drm,
-            suggestion = findBest(weights = solution, values = tactics),
-            opponent =  findBest(weights = oppSolution, values = tactics),
-            values = tactics.zip(solution).toMap
+            expected =  solution.last,
+            values = (tacticNames :+ "Expected").zip(solution).toMap,
+            suggestion = suggestion.name,
+            opponent = opponent.name,
+            drm = getDrm(suggestion, opponent)
         )
         stream.println(write(response))
         output.close()
