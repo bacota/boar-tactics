@@ -53,6 +53,7 @@
             <tr align="left"><label><td>Leader </td><td><input type="checkbox" id="leader"></td></label></tr>
              <tr align="left"><label><td>Opposing Leader </td><td><input type="checkbox" id="opposing-leader"></td></label></tr>
              <tr align="left"><label><td>Open Flank </td><td><input type="checkbox" id="open-flank"></td></label></tr>
+             <tr align="left"><label><td>Defender </td><td><input type="checkbox" id="defender"></td></label></tr>
              <tr align="left"><label><td>Withdraw?</td><td>
                 <select id="withdraw">
                     <option value="no">No</option>
@@ -162,6 +163,7 @@
           const leader = document.getElementById("leader").checked;
           const opposingLeader = document.getElementById("opposing-leader").checked;
           const openFlank = document.getElementById("open-flank").checked;
+          const defender = document.getElementById("defender").checked;
           withdraw = document.getElementById("withdraw").value;
           savannah = document.getElementById("savannah").value
           chew = document.getElementById("chew").value
@@ -192,7 +194,7 @@
               oppEchelon = false
           }
 
-          adjustedDrm = drm + oddsAdjustment(odds)
+          adjustedDrm = defender ? drm - oddsAdjustment(odds) : drm + oddsAdjustment(odds)
           
           const data = {
               "leader" : leader,
